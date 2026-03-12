@@ -1,0 +1,26 @@
+---
+import { generateBreadcrumbSchema } from '../utils/seo';
+
+interface Props {
+  items: { name: string; url: string }[];
+}
+
+const { items } = Astro.props;
+const siteUrl = 'https://ctarut.com';
+const fullItems = [{ name: 'Inicio', url: siteUrl }, ...items.map(i => ({ ...i, url: siteUrl + i.url }))];
+const schema = generateBreadcrumbSchema(fullItems);
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  {fullItems.map((item, i) => (
+    <>
+      {i > 0 && <span aria-hidden="true">›</span>}
+      {i < fullItems.length - 1 ? (
+        <a href={item.url}>{item.name}</a>
+      ) : (
+        <span aria-current="page">{item.name}</span>
+      )}
+    </>
+  ))}
+</nav>

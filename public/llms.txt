@@ -1,0 +1,15 @@
+# CuentaRUT Chile - ctarut.com
+
+> Guía completa sobre la Cuenta RUT de BancoEstado Chile. Información sobre trámites, consultas de saldo, pagos en línea y beneficios.
+
+## Sobre este sitio
+CuentaRUT Chile (ctarut.com) es un sitio informativo independiente que ofrece guías detalladas sobre la Cuenta RUT de BancoEstado. No somos BancoEstado ni estamos afiliados a ellos.
+
+## Contenido principal
+- Guías sobre la Cuenta RUT: solicitud, beneficios, montos máximos, bloqueo
+- Pagos en línea: Netflix, Uber, Spotify, Steam, Amazon, AliExpress
+- Información bancaria: PagoRUT, chequera electrónica, Cuenta Pro
+- Trámites: Certificado Fonasa, PayPal, tarjeta Bip
+
+## Contacto
+- Web: https://ctarut.com

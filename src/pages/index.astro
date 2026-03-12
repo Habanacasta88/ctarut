@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { generateWebSiteSchema } from '../utils/seo';
+import { generateExcerpt, cleanWpContent } from '../utils/content';
+import pagesData from '../data/pages.json';
+import postsData from '../data/posts.json';
+
+const featuredSlugs = [
+  'cuenta-rut',
+  'saldo-cuenta-rut',
+  'pagorut',
+  'asociar-cuenta-rut-a-paypal-chile',
+  'numero-de-tarjeta-cuenta-rut',
+  'beneficios-cuenta-rut-visa',
+];
+
+const featured = featuredSlugs
+  .map(slug => pagesData.find((p: any) => p.slug === slug))
+  .filter(Boolean);
+
+const latestPosts = postsData.slice(0, 6);
+const schema = generateWebSiteSchema();
+---
+
+<Base
+  title="Cuenta RUT de BancoEstado - Guía Completa Chile"
+  description="Guía completa sobre la Cuenta RUT de BancoEstado Chile. Consulta de saldo, trámites, pagos en línea, beneficios y todo lo que necesitas saber."
+  schema={schema}
+>
+  <section class="hero">
+    <div class="container">
+      <h1>Cuenta RUT de BancoEstado</h1>
+      <p>Tu guía completa para sacar el máximo partido a tu Cuenta RUT. Consulta de saldo, pagos en línea, trámites y mucho más.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <h2 class="mt-2" style="font-size:1.5rem;font-weight:700">Guías principales</h2>
+    <div class="card-grid">
+      {featured.map((page: any) => page && (
+        <ArticleCard
+          title={page.title}
+          slug={page.slug}
+          excerpt={page.seoDescription || page.excerpt || generateExcerpt(cleanWpContent(page.body || ''), 120)}
+          featuredImage={page.featuredImage}
+        />
+      ))}
+    </div>
+
+    <h2 class="mt-2" style="font-size:1.5rem;font-weight:700">Últimos artículos</h2>
+    <div class="card-grid">
+      {latestPosts.map((post: any) => (
+        <ArticleCard
+          title={post.title}
+          slug={post.slug}
+          excerpt={post.seoDescription || post.excerpt || generateExcerpt(cleanWpContent(post.body || ''), 120)}
+          featuredImage={post.featuredImage}
+          date={post.date}
+        />
+      ))}
+    </div>
+  </div>
+</Base>

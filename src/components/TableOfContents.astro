@@ -1,0 +1,19 @@
+---
+interface Props {
+  headings: { id: string; text: string; level: number }[];
+}
+
+const { headings } = Astro.props;
+const h2s = headings.filter(h => h.level === 2);
+---
+
+{h2s.length > 2 && (
+  <nav class="toc" aria-label="Tabla de contenidos">
+    <div class="toc-title">Contenido del artículo</div>
+    <ol>
+      {h2s.map((h) => (
+        <li><a href={`#${h.id}`}>{h.text}</a></li>
+      ))}
+    </ol>
+  </nav>
+)}

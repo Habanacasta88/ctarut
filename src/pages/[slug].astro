@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import { resolveYear, generateArticleSchema } from '../utils/seo';
+import { cleanWpContent, extractHeadings, addHeadingIds, generateExcerpt } from '../utils/content';
+import pagesData from '../data/pages.json';
+import postsData from '../data/posts.json';
+
+export function getStaticPaths() {
+  const all = [...pagesData, ...postsData];
+  return all.map((entry: any) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: any };
+
+const cleaned = cleanWpContent(entry.body || '');
+const htmlContent = addHeadingIds(cleaned);
+const headings = extractHeadings(cleaned);
+
+const seoTitle = entry.seoTitle ? resolveYear(entry.seoTitle) : entry.title;
+const seoDesc = entry.seoDescription || entry.excerpt || generateExcerpt(cleaned, 160);
+
+const siteUrl = 'https://ctarut.com';
+const articleSchema = generateArticleSchema({
+  title: seoTitle,
+  description: seoDesc,
+  url: `${siteUrl}/${entry.slug}`,
+  image: entry.featuredImage ? `${siteUrl}${entry.featuredImage}` : undefined,
+  datePublished: entry.date,
+  dateModified: entry.modified,
+});
+
+const formattedDate = new Date(entry.date).toLocaleDateString('es-CL', {
+  day: 'numeric', month: 'long', year: 'numeric'
+});
+const formattedModified = new Date(entry.modified).toLocaleDateString('es-CL', {
+  day: 'numeric', month: 'long', year: 'numeric'
+});
+
+const isLegal = entry.slug === 'politica-de-cookies' || entry.slug === 'politica-de-privacidad';
+---
+
+<Base
+  title={seoTitle}
+  description={seoDesc}
+  ogImage={entry.featuredImage}
+  schema={articleSchema}
+>
+  <div class="container">
+    <Breadcrumbs items={[
+      ...(entry.type === 'post' ? [{ name: 'Blog', url: '/blog' }] : []),
+      { name: entry.title, url: `/${entry.slug}` },
+    ]} />
+
+    <article>
+      <header class="article-header">
+        <h1>{entry.title}</h1>
+        {!isLegal && (
+          <div class="article-meta">
+            <span>Publicado: {formattedDate}</span>
+            {entry.date !== entry.modified && <span>Actualizado: {formattedModified}</span>}
+          </div>
+        )}
+      </header>
+
+      {entry.featuredImage && !isLegal && (
+        <div class="article-featured-img">
+          <img
+            src={entry.featuredImage}
+            alt={entry.title}
+            width="1100"
+            height="619"
+            loading="eager"
+          />
+        </div>
+      )}
+
+      {!isLegal && <TableOfContents headings={headings} />}
+
+      <div class="article-content" set:html={htmlContent} />
+    </article>
+  </div>
+</Base>

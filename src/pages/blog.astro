@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { generateExcerpt, cleanWpContent } from '../utils/content';
+import postsData from '../data/posts.json';
+---
+
+<Base
+  title="Blog - CuentaRUT Chile"
+  description="Artículos y noticias sobre la Cuenta RUT de BancoEstado. Novedades, guías y consejos para aprovechar tu cuenta."
+>
+  <div class="container">
+    <Breadcrumbs items={[{ name: 'Blog', url: '/blog' }]} />
+
+    <header class="article-header">
+      <h1>Blog</h1>
+      <p style="color:#666">Artículos y noticias sobre la Cuenta RUT de BancoEstado</p>
+    </header>
+
+    <div class="card-grid">
+      {postsData.map((post: any) => (
+        <ArticleCard
+          title={post.title}
+          slug={post.slug}
+          excerpt={post.seoDescription || post.excerpt || generateExcerpt(cleanWpContent(post.body || ''), 120)}
+          featuredImage={post.featuredImage}
+          date={post.date}
+        />
+      ))}
+    </div>
+  </div>
+</Base>
