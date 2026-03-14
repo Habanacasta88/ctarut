@@ -78,20 +78,34 @@ const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
       <nav class="main-nav" id="mainNav">
         <a href="/">Inicio</a>
         <a href="/saldo-cuenta-rut">Saldo</a>
-        <a href="/pagorut">PagoRUT</a>
         <div class="nav-dropdown">
           <button class="nav-dropdown-toggle">
             Guías <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
           </button>
           <div class="nav-dropdown-menu">
             <a href="/como-hacer-la-solicitud-de-la-cuenta-rut-de-banco-estado-paso-a-paso">Solicitar Cuenta RUT</a>
-            <a href="/asociar-cuenta-rut-a-paypal-chile">Asociar a PayPal</a>
-            <a href="/certificado-fonasa">Certificado Fonasa</a>
-            <a href="/cuenta-rut-para-ninos">Cuenta RUT para niños</a>
-            <a href="/numero-de-tarjeta-cuenta-rut">Número de tarjeta</a>
             <a href="/beneficios-cuenta-rut-visa">Beneficios Visa</a>
-            <a href="/cuales-son-los-montos-maximos-de-la-cuentarut">Montos máximos</a>
-            <a href="/como-bloquear-la-tarjeta-de-mi-cuenta-rut">Bloquear tarjeta</a>
+            <a href="/cuenta-rut-para-ninos">Cuenta RUT para niños</a>
+            <a href="/cuenta-rut-para-extranjeros">Cuenta RUT para extranjeros</a>
+            <a href="/limites-cuenta-rut-2026">Límites y montos</a>
+            <a href="/comisiones-cuenta-rut">Comisiones y costos</a>
+            <a href="/transacciones-gratuitas-cuenta-rut">Transacciones gratis</a>
+            <a href="/diferencia-chequera-electronica-y-cuentarut">Chequera electrónica</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-toggle">
+            Trámites <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <a href="/activar-clave-internet-bancoestado">Activar clave internet</a>
+            <a href="/recuperar-clave-internet-cuenta-rut">Recuperar clave internet</a>
+            <a href="/desbloquear-cuenta-rut">Desbloquear cuenta</a>
+            <a href="/be-pass-bancoestado">BE Pass</a>
+            <a href="/renovar-tarjeta-cuenta-rut">Renovar tarjeta</a>
+            <a href="/cartola-cuenta-rut">Cartola y certificados</a>
+            <a href="/depositar-dinero-cuenta-rut">Depositar dinero</a>
+            <a href="/bonos-cuenta-rut-2026">Cobrar bonos</a>
           </div>
         </div>
         <div class="nav-dropdown">
@@ -105,7 +119,7 @@ const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
             <a href="/comprar-en-steam-con-la-cuenta-rut">Steam</a>
             <a href="/comprar-por-amazon-con-cuentarut">Amazon</a>
             <a href="/como-pagar-en-aliexpress-con-la-cuenta-rut">AliExpress</a>
-            <a href="/comprar-en-wish-con-cuenta-rut">Wish</a>
+            <a href="/asociar-cuenta-rut-a-paypal-chile">PayPal</a>
             <a href="/como-recargar-movistar-desde-la-cuenta-rut">Movistar</a>
           </div>
         </div>
@@ -124,9 +138,23 @@ const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
         <div class="footer-col">
           <h4>Cuenta RUT</h4>
           <a href="/cuenta-rut">¿Qué es la Cuenta RUT?</a>
-          <a href="/saldo-cuenta-rut">Consultar saldo</a>
           <a href="/como-hacer-la-solicitud-de-la-cuenta-rut-de-banco-estado-paso-a-paso">Solicitar cuenta</a>
           <a href="/beneficios-cuenta-rut-visa">Beneficios Visa</a>
+          <a href="/cuenta-rut-para-ninos">Cuenta RUT para niños</a>
+          <a href="/cuenta-rut-para-extranjeros">Cuenta RUT para extranjeros</a>
+          <a href="/limites-cuenta-rut-2026">Límites y montos</a>
+          <a href="/comisiones-cuenta-rut">Comisiones</a>
+        </div>
+        <div class="footer-col">
+          <h4>Trámites</h4>
+          <a href="/activar-clave-internet-bancoestado">Activar clave internet</a>
+          <a href="/recuperar-clave-internet-cuenta-rut">Recuperar clave</a>
+          <a href="/desbloquear-cuenta-rut">Desbloquear cuenta</a>
+          <a href="/be-pass-bancoestado">BE Pass</a>
+          <a href="/renovar-tarjeta-cuenta-rut">Renovar tarjeta</a>
+          <a href="/cartola-cuenta-rut">Cartola y certificados</a>
+          <a href="/depositar-dinero-cuenta-rut">Depositar dinero</a>
+          <a href="/bonos-cuenta-rut-2026">Cobrar bonos</a>
         </div>
         <div class="footer-col">
           <h4>Pagos en línea</h4>
@@ -134,16 +162,16 @@ const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
           <a href="/pagar-uber-con-cuenta-rut">Pagar Uber</a>
           <a href="/como-pagar-spotify-con-cuenta-rut">Pagar Spotify</a>
           <a href="/comprar-por-amazon-con-cuentarut">Comprar en Amazon</a>
-        </div>
-        <div class="footer-col">
-          <h4>Guías útiles</h4>
           <a href="/asociar-cuenta-rut-a-paypal-chile">Asociar a PayPal</a>
-          <a href="/numero-de-tarjeta-cuenta-rut">Número de tarjeta</a>
           <a href="/como-bloquear-la-tarjeta-de-mi-cuenta-rut">Bloquear tarjeta</a>
-          <a href="/cuales-son-los-montos-maximos-de-la-cuentarut">Montos máximos</a>
         </div>
         <div class="footer-col">
-          <h4>Legal</h4>
+          <h4>Más información</h4>
+          <a href="/saldo-cuenta-rut">Consultar saldo</a>
+          <a href="/transacciones-gratuitas-cuenta-rut">Transacciones gratis</a>
+          <a href="/cuenta-rut-desde-el-extranjero">Desde el extranjero</a>
+          <a href="/clave-telefonica-cuenta-rut">Clave telefónica</a>
+          <a href="/blog">Blog</a>
           <a href="/politica-de-cookies">Política de cookies</a>
           <a href="/politica-de-privacidad">Política de privacidad</a>
         </div>
