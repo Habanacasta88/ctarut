@@ -112,3 +112,10 @@ a:hover{color:#004499}
 .text-center{text-align:center}
 .mt-2{margin-top:2rem}
 .mb-2{margin-bottom:2rem}
+
+/* === WP Shortcode Replacements === */
+.info-box{background:#fff8f0;border:1px solid #f49600;border-radius:8px;padding:1.25rem;margin:1.5rem 0}
+.info-box-title{font-weight:700;color:#d97706;margin-bottom:.5rem;font-size:1.05rem}
+.info-note{background:#e8f8ff;border-left:4px solid #16ccfb;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 8px 8px 0}
+.cta-button{display:inline-block;background:#f49600;color:#fff;font-weight:600;padding:.75rem 1.5rem;border-radius:6px;text-align:center;transition:background .2s,transform .1s;margin:.5rem 0}
+.cta-button:hover{background:#d97706;color:#fff;transform:translateY(-1px)}
