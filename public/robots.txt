@@ -10,4 +10,7 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://ctarut.com/sitemap-index.xml
+User-agent: GoogleBot
+Allow: /
+
+Sitemap: https://labradores.org/sitemap-index.xml

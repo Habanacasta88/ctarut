@@ -1,0 +1,69 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { generateExcerpt, cleanWpContent } from '../../utils/content';
+import postsData from '../../data/posts.json';
+
+const PER_PAGE = 32;
+const allPosts = postsData as any[];
+const totalPages = Math.ceil(allPosts.length / PER_PAGE);
+
+export function getStaticPaths() {
+  const PER_PAGE = 32;
+  const allPosts = postsData as any[];
+  const totalPages = Math.ceil(allPosts.length / PER_PAGE);
+  return Array.from({ length: totalPages - 1 }, (_, i) => ({
+    params: { page: String(i + 2) },
+    props: { page: i + 2 },
+  }));
+}
+
+const { page } = Astro.props as { page: number };
+const posts = allPosts.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+const prevPage = page > 1 ? (page === 2 ? '/blog/' : `/blog/${page - 1}/`) : null;
+const nextPage = page < totalPages ? `/blog/${page + 1}/` : null;
+---
+
+<Base
+  title={`Blog — Página ${page} — Labradores.org`}
+  description={`Artículos sobre el Labrador Retriever. Página ${page} de ${totalPages}.`}
+  noindex={page > 5}
+  prevUrl={prevPage || undefined}
+  nextUrl={nextPage || undefined}
+>
+  <div class="container">
+    <div class="breadcrumbs">
+      <a href="/">Inicio</a><span class="sep">›</span>
+      <a href="/blog/">Blog</a><span class="sep">›</span>
+      <span>Página {page}</span>
+    </div>
+
+    <div class="cat-header">
+      <h1>Blog <span style="font-weight:400;font-size:1rem">— Página {page} de {totalPages}</span></h1>
+    </div>
+
+    <div class="card-grid">
+      {posts.map((post: any) => (
+        <ArticleCard
+          title={post.title}
+          slug={post.slug}
+          excerpt={post.seoDescription || post.excerpt || generateExcerpt(cleanWpContent(post.body || ''), 115)}
+          featuredImage={post.featuredImage}
+          date={post.date}
+          category={post.category_name}
+          categorySlug={post.category_slug}
+        />
+      ))}
+    </div>
+
+    <nav class="pagination" aria-label="Paginación">
+      {prevPage && <a href={prevPage}>← Anterior</a>}
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+        p === page
+          ? <span class="current">{p}</span>
+          : <a href={p === 1 ? '/blog/' : `/blog/${p}/`}>{p}</a>
+      ))}
+      {nextPage && <a href={nextPage}>Siguiente →</a>}
+    </nav>
+  </div>
+</Base>

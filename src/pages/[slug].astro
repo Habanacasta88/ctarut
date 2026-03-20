@@ -1,14 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
 import TableOfContents from '../components/TableOfContents.astro';
-import { resolveYear, generateArticleSchema } from '../utils/seo';
-import { cleanWpContent, extractHeadings, addHeadingIds, generateExcerpt } from '../utils/content';
+import AffiliateBlock from '../components/AffiliateBlock.astro';
+import { cleanWpContent, extractHeadings, addHeadingIds, generateExcerpt, injectInternalLinks } from '../utils/content';
 import pagesData from '../data/pages.json';
 import postsData from '../data/posts.json';
+import linkmapData from '../data/linkmap.json';
+
+const CAT_SLUG_MAP: Record<string, string> = {
+  'Reseñas': 'resenas', 'Cuidados': 'cuidados', 'Alimentación': 'alimentacion',
+  'Cachorros': 'cachorros', 'Entrenamiento': 'entrenamiento', 'Blog': 'blog'
+};
 
 export function getStaticPaths() {
-  const all = [...pagesData, ...postsData];
+  const all = [...(pagesData as any[]), ...(postsData as any[])];
   return all.map((entry: any) => ({
     params: { slug: entry.slug },
     props: { entry },
@@ -16,72 +21,152 @@ export function getStaticPaths() {
 }
 
 const { entry } = Astro.props as { entry: any };
+const isPost = !!entry.category_name;
+
+// Posts relacionados: 3 del mismo cat, excluir el actual
+const related = isPost
+  ? (postsData as any[])
+      .filter(p => p.category_name === entry.category_name && p.slug !== entry.slug)
+      .slice(0, 3)
+  : [];
 
 const cleaned = cleanWpContent(entry.body || '');
-const htmlContent = addHeadingIds(cleaned);
+const linkedHtml = isPost ? injectInternalLinks(cleaned, linkmapData as any, entry.slug) : cleaned;
+const htmlContent = addHeadingIds(linkedHtml);
 const headings = extractHeadings(cleaned);
 
-const seoTitle = entry.seoTitle ? resolveYear(entry.seoTitle) : entry.title;
+const siteUrl = 'https://labradores.org';
+// Limpiar variables Yoast sin resolver (%%title%%, %%page%%, etc.)
+const rawSeoTitle = entry.seoTitle || entry.title;
+const seoTitle = rawSeoTitle.includes('%%') ? entry.title : rawSeoTitle;
 const seoDesc = entry.seoDescription || entry.excerpt || generateExcerpt(cleaned, 160);
+const catSlug = isPost ? (CAT_SLUG_MAP[entry.category_name] || 'blog') : null;
 
-const siteUrl = 'https://ctarut.com';
-const articleSchema = generateArticleSchema({
-  title: seoTitle,
-  description: seoDesc,
-  url: `${siteUrl}/${entry.slug}`,
-  image: entry.featuredImage ? `${siteUrl}${entry.featuredImage}` : undefined,
-  datePublished: entry.date,
-  dateModified: entry.modified,
-});
+// Estimación de palabras para wordCount
+const wordCount = cleaned.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
 
-const formattedDate = new Date(entry.date).toLocaleDateString('es-CL', {
+const formattedDate = entry.date ? new Date(entry.date).toLocaleDateString('es-ES', {
   day: 'numeric', month: 'long', year: 'numeric'
-});
-const formattedModified = new Date(entry.modified).toLocaleDateString('es-CL', {
-  day: 'numeric', month: 'long', year: 'numeric'
-});
+}) : '';
 
-const isLegal = entry.slug === 'politica-de-cookies' || entry.slug === 'politica-de-privacidad';
+// FAQ Schema si el post tiene preguntas frecuentes
+const faqSchema = (isPost && entry.faqs && entry.faqs.length > 0) ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": entry.faqs.map((faq: { q: string; a: string }) => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.a }
+  }))
+} : null;
+
+const articleSchema = isPost ? {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": seoTitle,
+  "description": seoDesc,
+  "url": `${siteUrl}/${entry.slug}/`,
+  "inLanguage": "es",
+  "wordCount": wordCount,
+  "datePublished": entry.date,
+  "dateModified": entry.modified || entry.date,
+  "image": entry.featuredImage ? `${siteUrl}${entry.featuredImage}` : undefined,
+  "author": {
+    "@type": "Organization",
+    "name": "Labradores.org",
+    "url": siteUrl
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Labradores.org",
+    "url": siteUrl,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteUrl}/images/labradores-favicon.png`
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `${siteUrl}/${entry.slug}/`
+  }
+} : null;
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": siteUrl + "/" },
+    ...(isPost && catSlug ? [{ "@type": "ListItem", "position": 2, "name": entry.category_name, "item": `${siteUrl}/categoria/${catSlug}/` }] : []),
+    { "@type": "ListItem", "position": isPost && catSlug ? 3 : 2, "name": entry.title, "item": `${siteUrl}/${entry.slug}/` }
+  ]
+};
 ---
 
 <Base
-  title={seoTitle}
+  title={`${seoTitle} — Labradores.org`}
   description={seoDesc}
   ogImage={entry.featuredImage}
-  schema={articleSchema}
+  canonicalUrl={`https://labradores.org/${entry.slug}/`}
+  ogType={isPost ? 'article' : 'website'}
+  schema={[breadcrumbSchema, ...(articleSchema ? [articleSchema] : []), ...(faqSchema ? [faqSchema] : [])]}
 >
   <div class="container">
-    <Breadcrumbs items={[
-      ...(entry.type === 'post' ? [{ name: 'Blog', url: '/blog' }] : []),
-      { name: entry.title, url: `/${entry.slug}` },
-    ]} />
+    <div class="breadcrumbs">
+      <a href="/">Inicio</a>
+      {isPost && catSlug && (
+        <><span class="sep">›</span><a href={`/categoria/${catSlug}/`}>{entry.category_name}</a></>
+      )}
+      <span class="sep">›</span>
+      <span>{entry.title}</span>
+    </div>
 
     <article>
       <header class="article-header">
-        <h1>{entry.title}</h1>
-        {!isLegal && (
+        {isPost && (
           <div class="article-meta">
-            <span>Publicado: {formattedDate}</span>
-            {entry.date !== entry.modified && <span>Actualizado: {formattedModified}</span>}
+            <a href={`/categoria/${catSlug}/`} class="cat-badge">{entry.category_name}</a>
+            {formattedDate && <time datetime={entry.date}>{formattedDate}</time>}
           </div>
         )}
+        <h1>{entry.title}</h1>
       </header>
 
-      {entry.featuredImage && !isLegal && (
+      {entry.featuredImage && (
         <div class="article-featured-img">
-          <img
-            src={entry.featuredImage}
-            alt={entry.title}
-            width="1100"
-            height="619"
-            loading="eager"
-          />
+          <img src={entry.featuredImage} alt={entry.title} width="800" height="450" loading="eager" />
         </div>
       )}
 
-      {!isLegal && <TableOfContents headings={headings} />}
+      {headings.length >= 3 && (
+        <TableOfContents headings={headings} />
+      )}
 
       <div class="article-content" set:html={htmlContent} />
+
+      {isPost && (
+        <AffiliateBlock title={entry.title} category={entry.category_name} />
+      )}
     </article>
+
+    {related.length > 0 && (
+      <aside class="related-posts">
+        <h2 class="related-title">Artículos relacionados</h2>
+        <div class="related-grid">
+          {related.map((rel: any) => (
+            <a href={`/${rel.slug}/`} class="related-card">
+              {rel.featuredImage && (
+                <div class="related-img">
+                  <img src={rel.featuredImage} alt={rel.title} loading="lazy" width="280" height="157" />
+                </div>
+              )}
+              <div class="related-body">
+                <span class="related-cat">{rel.category_name}</span>
+                <p class="related-post-title">{rel.title}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </aside>
+    )}
   </div>
 </Base>

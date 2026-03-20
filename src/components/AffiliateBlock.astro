@@ -1,0 +1,122 @@
+---
+/**
+ * AffiliateBlock.astro
+ * Bloque de afiliado Amazon contextual por categoría y título del post.
+ * ─ rel="sponsored noopener noreferrer" (cumple Google Search guidelines)
+ * ─ Disclosure visible (cumple Amazon Associates TOS)
+ * ─ Categoría "Mascotas" de Amazon para máxima afinidad
+ */
+
+interface Props {
+  title: string;
+  category: string;
+}
+
+const { title, category } = Astro.props;
+const TAG = 'enjoys0d-21';
+
+// ── Nodo de categoría Amazon (node ID para afinar búsquedas) ──────────────
+// 3497764031 = Tienda de Mascotas en amazon.es
+const AMAZON_NODE = '3497764031';
+
+// ── Query contextual por categoría ────────────────────────────────────────
+const CAT_CONFIG: Record<string, {
+  icon: string;
+  label: string;
+  desc: string;
+  baseQuery: string;
+}> = {
+  'Reseñas': {
+    icon: '🛒',
+    label: 'Ver productos recomendados',
+    desc: 'Encuentra los mejores accesorios para tu Labrador en Amazon',
+    baseQuery: 'accesorios labrador retriever',
+  },
+  'Alimentación': {
+    icon: '🥩',
+    label: 'Ver piensos y alimentos',
+    desc: 'Piensos, snacks y complementos nutricionales para Labrador',
+    baseQuery: 'pienso labrador retriever',
+  },
+  'Cuidados': {
+    icon: '💊',
+    label: 'Ver productos de salud y cuidado',
+    desc: 'Productos veterinarios y de bienestar para tu perro',
+    baseQuery: 'cuidado salud perro labrador',
+  },
+  'Entrenamiento': {
+    icon: '🏅',
+    label: 'Ver accesorios de adiestramiento',
+    desc: 'Arneses, correas, clickers y herramientas de entrenamiento',
+    baseQuery: 'adiestramiento perro labrador correa',
+  },
+  'Cachorros': {
+    icon: '🐶',
+    label: 'Ver productos para cachorros',
+    desc: 'Todo lo que necesita tu cachorro Labrador Retriever',
+    baseQuery: 'cachorro labrador juguetes accesorios',
+  },
+  'Blog': {
+    icon: '🐾',
+    label: 'Ver accesorios para Labrador',
+    desc: 'Los mejores productos para tu Labrador Retriever en Amazon',
+    baseQuery: 'labrador retriever accesorios',
+  },
+};
+
+const config = CAT_CONFIG[category] ?? CAT_CONFIG['Blog'];
+
+// ── Extrae keywords del título para query personalizada ───────────────────
+function buildQuery(title: string, base: string): string {
+  // Quitar signos de puntuación y prefijos de pregunta
+  const clean = title
+    .replace(/[¿?¡!«»""'']/g, '')
+    .replace(/^(cómo|qué|cuándo|cuánto|por qué|dónde|cuál|pueden|puede|los perros pueden|los perros|es seguro)\s+/i, '')
+    .trim();
+
+  // Si el título es muy corto o genérico, usar la base de categoría
+  if (clean.length < 10) return base;
+
+  // Detectar si el título menciona un producto/medicamento concreto
+  // (primera letra mayúscula tras limpieza = nombre propio/marca)
+  const firstWord = clean.split(' ')[0];
+  const seemsProduct = /^[A-ZÁÉÍÓÚÜ]/.test(firstWord) && firstWord.length > 3;
+
+  if (seemsProduct) {
+    // Ej: "Aquaphor para perros", "Bepanthen en Perros" → "Aquaphor perros amazon"
+    return `${clean.substring(0, 50)} perro`;
+  }
+
+  // Para el resto: combinar resumen corto del título con la base de categoría
+  const shortTitle = clean.length > 35 ? clean.substring(0, 35).replace(/\s+\S*$/, '') : clean;
+  return `${shortTitle} ${base}`.substring(0, 70);
+}
+
+const searchQuery = buildQuery(title, config.baseQuery);
+const amazonUrl = `https://www.amazon.es/s?k=${encodeURIComponent(searchQuery)}&i=pets&rh=n%3A${AMAZON_NODE}&tag=${TAG}&linkCode=ur2`;
+---
+
+<div class="affiliate-block" role="complementary" aria-label="Productos relacionados en Amazon">
+  <div class="affiliate-inner">
+    <div class="affiliate-text">
+      <span class="affiliate-icon" aria-hidden="true">{config.icon}</span>
+      <div>
+        <p class="affiliate-label">{config.label}</p>
+        <p class="affiliate-desc">{config.desc}</p>
+      </div>
+    </div>
+    <a
+      href={amazonUrl}
+      target="_blank"
+      rel="sponsored noopener noreferrer"
+      class="affiliate-btn"
+      aria-label={`${config.label} en Amazon (se abre en nueva pestaña)`}
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-right:6px"><path d="M18.42 14.06c-.26-.2-1.67-.8-1.93-.89-.26-.1-.45-.14-.65.13-.19.27-.76.89-.93 1.08-.17.18-.34.21-.64.07-.3-.14-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.18-.3 0-.46.13-.6.13-.14.3-.34.44-.51.15-.17.19-.3.3-.5.1-.2.05-.37-.02-.52s-.64-1.55-.88-2.12c-.23-.56-.47-.48-.65-.49H9.5c-.19 0-.5.07-.76.36C8.48 6.77 7.5 7.7 7.5 9.5s1.46 3.6 1.66 3.85c.2.24 2.88 4.4 6.97 6.17 1 .43 1.77.69 2.38.88.99.32 1.9.27 2.62.17.8-.12 2.45-.99 2.8-1.96.34-.96.34-1.79.24-1.96-.1-.18-.37-.28-.64-.47z"/></svg>
+      Ver en Amazon
+    </a>
+  </div>
+  <p class="affiliate-disclosure">
+    * Como Asociado de Amazon obtenemos comisión por las compras que califican, sin coste adicional para ti.
+  </p>
+</div>
