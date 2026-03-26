@@ -8,20 +8,27 @@ interface Props {
   canonicalUrl?: string;
   schema?: object | object[];
   noindex?: boolean;
+  ogType?: 'website' | 'article';
+  prevUrl?: string;
+  nextUrl?: string;
 }
 
 const {
   title,
-  description = 'Guía completa sobre la Cuenta RUT de BancoEstado Chile. Consultas, trámites y pagos en línea.',
+  description = 'Todo sobre el Labrador Retriever: cuidados, alimentación, entrenamiento, cachorros y reseñas de productos.',
   ogImage,
   canonicalUrl,
   schema,
   noindex = false,
+  ogType = 'website',
+  prevUrl,
+  nextUrl,
 } = Astro.props;
 
-const siteUrl = 'https://ctarut.com';
+const siteUrl = 'https://labradores.org';
 const fullCanonical = canonicalUrl || new URL(Astro.url.pathname, siteUrl).href;
 const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -33,41 +40,42 @@ const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
   <meta name="description" content={description} />
   <link rel="canonical" href={fullCanonical} />
   {noindex && <meta name="robots" content="noindex,nofollow" />}
+  {prevUrl && <link rel="prev" href={prevUrl} />}
+  {nextUrl && <link rel="next" href={nextUrl} />}
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={ogType} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={fullCanonical} />
-  <meta property="og:site_name" content="CuentaRUT Chile" />
-  <meta property="og:locale" content="es_CL" />
+  <meta property="og:site_name" content="Labradores.org" />
+  <meta property="og:locale" content="es_ES" />
   {ogImage && <meta property="og:image" content={ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />}
 
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
+  {ogImage && <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />}
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/jpeg" href="/images/cropped-cuentarut-1.jpg" />
+  <link rel="icon" type="image/png" href="/images/labradores-favicon.png" />
 
-  <!-- Fonts (non-blocking) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
 
-  <!-- Schema.org -->
   {schemas.map((s) => (
     <script type="application/ld+json" set:html={JSON.stringify(s)} />
   ))}
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1887931946230317" crossorigin="anonymous"></script>
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <a href="/" class="site-logo">
-        <img src="/images/cropped-cuentarut-1.jpg" alt="CuentaRUT" width="36" height="36" />
-        <span>CuentaRUT</span>
+        <span class="logo-paw">🐾</span>
+        <span>Labradores<strong>.org</strong></span>
       </a>
 
       <button class="nav-toggle" aria-label="Abrir menú" id="navToggle">
@@ -78,53 +86,12 @@ const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 
       <nav class="main-nav" id="mainNav">
         <a href="/">Inicio</a>
-        <a href="/saldo-cuenta-rut">Saldo</a>
-        <div class="nav-dropdown">
-          <button class="nav-dropdown-toggle">
-            Guías <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          </button>
-          <div class="nav-dropdown-menu">
-            <a href="/como-hacer-la-solicitud-de-la-cuenta-rut-de-banco-estado-paso-a-paso">Solicitar Cuenta RUT</a>
-            <a href="/beneficios-cuenta-rut-visa">Beneficios Visa</a>
-            <a href="/cuenta-rut-para-ninos">Cuenta RUT para niños</a>
-            <a href="/cuenta-rut-para-extranjeros">Cuenta RUT para extranjeros</a>
-            <a href="/limites-cuenta-rut-2026">Límites y montos</a>
-            <a href="/comisiones-cuenta-rut">Comisiones y costos</a>
-            <a href="/transacciones-gratuitas-cuenta-rut">Transacciones gratis</a>
-            <a href="/diferencia-chequera-electronica-y-cuentarut">Chequera electrónica</a>
-          </div>
-        </div>
-        <div class="nav-dropdown">
-          <button class="nav-dropdown-toggle">
-            Trámites <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          </button>
-          <div class="nav-dropdown-menu">
-            <a href="/activar-clave-internet-bancoestado">Activar clave internet</a>
-            <a href="/recuperar-clave-internet-cuenta-rut">Recuperar clave internet</a>
-            <a href="/desbloquear-cuenta-rut">Desbloquear cuenta</a>
-            <a href="/be-pass-bancoestado">BE Pass</a>
-            <a href="/renovar-tarjeta-cuenta-rut">Renovar tarjeta</a>
-            <a href="/cartola-cuenta-rut">Cartola y certificados</a>
-            <a href="/depositar-dinero-cuenta-rut">Depositar dinero</a>
-            <a href="/bonos-cuenta-rut-2026">Cobrar bonos</a>
-          </div>
-        </div>
-        <div class="nav-dropdown">
-          <button class="nav-dropdown-toggle">
-            Pagos <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          </button>
-          <div class="nav-dropdown-menu">
-            <a href="/contratar-pagar-netflix-con-cuenta-rut">Netflix</a>
-            <a href="/pagar-uber-con-cuenta-rut">Uber</a>
-            <a href="/como-pagar-spotify-con-cuenta-rut">Spotify</a>
-            <a href="/comprar-en-steam-con-la-cuenta-rut">Steam</a>
-            <a href="/comprar-por-amazon-con-cuentarut">Amazon</a>
-            <a href="/como-pagar-en-aliexpress-con-la-cuenta-rut">AliExpress</a>
-            <a href="/asociar-cuenta-rut-a-paypal-chile">PayPal</a>
-            <a href="/como-recargar-movistar-desde-la-cuenta-rut">Movistar</a>
-          </div>
-        </div>
-        <a href="/blog">Blog</a>
+        <a href="/categoria/cuidados/">Cuidados</a>
+        <a href="/categoria/alimentacion/">Alimentación</a>
+        <a href="/categoria/entrenamiento/">Entrenamiento</a>
+        <a href="/categoria/cachorros/">Cachorros</a>
+        <a href="/categoria/resenas/">Reseñas</a>
+        <a href="/blog/">Blog</a>
       </nav>
     </div>
   </header>
@@ -137,48 +104,29 @@ const schemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col">
-          <h4>Cuenta RUT</h4>
-          <a href="/cuenta-rut">¿Qué es la Cuenta RUT?</a>
-          <a href="/como-hacer-la-solicitud-de-la-cuenta-rut-de-banco-estado-paso-a-paso">Solicitar cuenta</a>
-          <a href="/beneficios-cuenta-rut-visa">Beneficios Visa</a>
-          <a href="/cuenta-rut-para-ninos">Cuenta RUT para niños</a>
-          <a href="/cuenta-rut-para-extranjeros">Cuenta RUT para extranjeros</a>
-          <a href="/limites-cuenta-rut-2026">Límites y montos</a>
-          <a href="/comisiones-cuenta-rut">Comisiones</a>
+          <div class="footer-brand">🐾 <strong>Labradores.org</strong></div>
+          <p class="footer-desc">Tu guía de referencia sobre el Labrador Retriever en español: cuidados, salud, alimentación y más.</p>
         </div>
         <div class="footer-col">
-          <h4>Trámites</h4>
-          <a href="/activar-clave-internet-bancoestado">Activar clave internet</a>
-          <a href="/recuperar-clave-internet-cuenta-rut">Recuperar clave</a>
-          <a href="/desbloquear-cuenta-rut">Desbloquear cuenta</a>
-          <a href="/be-pass-bancoestado">BE Pass</a>
-          <a href="/renovar-tarjeta-cuenta-rut">Renovar tarjeta</a>
-          <a href="/cartola-cuenta-rut">Cartola y certificados</a>
-          <a href="/depositar-dinero-cuenta-rut">Depositar dinero</a>
-          <a href="/bonos-cuenta-rut-2026">Cobrar bonos</a>
+          <h4>Categorías</h4>
+          <a href="/categoria/cuidados/">Cuidados</a>
+          <a href="/categoria/alimentacion/">Alimentación</a>
+          <a href="/categoria/entrenamiento/">Entrenamiento</a>
+          <a href="/categoria/cachorros/">Cachorros</a>
+          <a href="/categoria/resenas/">Reseñas</a>
+          <a href="/blog/">Blog general</a>
         </div>
         <div class="footer-col">
-          <h4>Pagos en línea</h4>
-          <a href="/contratar-pagar-netflix-con-cuenta-rut">Pagar Netflix</a>
-          <a href="/pagar-uber-con-cuenta-rut">Pagar Uber</a>
-          <a href="/como-pagar-spotify-con-cuenta-rut">Pagar Spotify</a>
-          <a href="/comprar-por-amazon-con-cuentarut">Comprar en Amazon</a>
-          <a href="/asociar-cuenta-rut-a-paypal-chile">Asociar a PayPal</a>
-          <a href="/como-bloquear-la-tarjeta-de-mi-cuenta-rut">Bloquear tarjeta</a>
-        </div>
-        <div class="footer-col">
-          <h4>Más información</h4>
-          <a href="/saldo-cuenta-rut">Consultar saldo</a>
-          <a href="/transacciones-gratuitas-cuenta-rut">Transacciones gratis</a>
-          <a href="/cuenta-rut-desde-el-extranjero">Desde el extranjero</a>
-          <a href="/clave-telefonica-cuenta-rut">Clave telefónica</a>
-          <a href="/blog">Blog</a>
-          <a href="/politica-de-cookies">Política de cookies</a>
-          <a href="/politica-de-privacidad">Política de privacidad</a>
+          <h4>Páginas</h4>
+          <a href="/labrador-retriever/">Labrador Retriever</a>
+          <a href="/sobre-nosotros/">Sobre nosotros</a>
+          <a href="/politica-de-privacidad/">Política de privacidad</a>
+          <a href="/contacto/">Contacto</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} ctarut.com — Guía informativa sobre la Cuenta RUT de BancoEstado. No somos BancoEstado.</p>
+        <p>&copy; {new Date().getFullYear()} Labradores.org — Información sobre el Labrador Retriever.</p>
+        <p class="footer-affiliate-note">Labradores.org es participante en el Programa de Afiliados de Amazon EU, un programa de publicidad para afiliados diseñado para ofrecer a sitios web un medio de obtener comisiones por publicidad mediante la creación de enlaces a amazon.es. Como Asociado de Amazon, obtenemos comisión por las compras que califican, sin coste adicional para el comprador.</p>
       </div>
     </div>
   </footer>

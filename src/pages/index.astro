@@ -1,54 +1,80 @@
 ---
 import Base from '../layouts/Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import { generateWebSiteSchema } from '../utils/seo';
 import { generateExcerpt, cleanWpContent } from '../utils/content';
-import pagesData from '../data/pages.json';
 import postsData from '../data/posts.json';
 
-const featuredSlugs = [
-  'cuenta-rut',
-  'saldo-cuenta-rut',
-  'pagorut',
-  'asociar-cuenta-rut-a-paypal-chile',
-  'numero-de-tarjeta-cuenta-rut',
-  'beneficios-cuenta-rut-visa',
+const cats = [
+  { name: 'Cuidados',       slug: 'cuidados',     emoji: '🩺' },
+  { name: 'Alimentación',   slug: 'alimentacion',  emoji: '🥩' },
+  { name: 'Entrenamiento',  slug: 'entrenamiento', emoji: '🏃' },
+  { name: 'Cachorros',      slug: 'cachorros',     emoji: '🐶' },
+  { name: 'Reseñas',        slug: 'resenas',       emoji: '⭐' },
+  { name: 'Blog',           slug: 'blog',          emoji: '📝' },
 ];
 
-const featured = featuredSlugs
-  .map(slug => pagesData.find((p: any) => p.slug === slug))
-  .filter(Boolean);
+// Últimos 6 posts globales
+const latestPosts = (postsData as any[]).slice(0, 6);
 
-const latestPosts = postsData.slice(0, 6);
-const schema = generateWebSiteSchema();
+// Por categoría: 4 más recientes de cada una
+function getCatPosts(slug: string, count = 4) {
+  const catSlugMap: Record<string,string> = { resenas: 'Reseñas', cuidados: 'Cuidados', alimentacion: 'Alimentación', cachorros: 'Cachorros', entrenamiento: 'Entrenamiento', blog: 'Blog' };
+  const catName = catSlugMap[slug] || slug;
+  return (postsData as any[]).filter(p => p.category_name === catName).slice(0, count);
+}
+
+const siteUrl = 'https://labradores.org';
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Labradores.org",
+  "url": siteUrl,
+  "inLanguage": "es",
+  "description": "La guía más completa en español sobre el Labrador Retriever: cuidados, alimentación, entrenamiento, cachorros, salud y reseñas de productos.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": `${siteUrl}/?s={search_term_string}`
+    },
+    "query-input": "required name=search_term_string"
+  }
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Labradores.org",
+  "url": siteUrl,
+  "logo": {
+    "@type": "ImageObject",
+    "url": `${siteUrl}/images/labradores-favicon.png`
+  },
+  "sameAs": [],
+  "description": "Sitio informativo sobre el Labrador Retriever en español."
+};
 ---
 
 <Base
-  title="Cuenta RUT de BancoEstado - Guía Completa Chile"
-  description="Guía completa sobre la Cuenta RUT de BancoEstado Chile. Consulta de saldo, trámites, pagos en línea, beneficios y todo lo que necesitas saber."
-  schema={schema}
+  title="Labradores.org — Todo sobre el Labrador Retriever"
+  description="Tu guía completa sobre el Labrador Retriever: cuidados, alimentación, entrenamiento, cachorros, salud y reseñas de productos."
+  schema={[websiteSchema, organizationSchema]}
 >
   <section class="hero">
     <div class="container">
-      <h1>Cuenta RUT de BancoEstado</h1>
-      <p>Tu guía completa para sacar el máximo partido a tu Cuenta RUT. Consulta de saldo, pagos en línea, trámites y mucho más.</p>
+      <h1>Todo sobre el Labrador Retriever</h1>
+      <p>La guía más completa en español sobre la raza más popular: cuidados, salud, alimentación y mucho más.</p>
+      <div class="hero-cats">
+        {cats.map(c => (
+          <a href={`/categoria/${c.slug}/`} class="hero-cat-link">{c.emoji} {c.name}</a>
+        ))}
+      </div>
     </div>
   </section>
 
   <div class="container">
-    <h2 class="mt-2" style="font-size:1.5rem;font-weight:700">Guías principales</h2>
-    <div class="card-grid">
-      {featured.map((page: any) => page && (
-        <ArticleCard
-          title={page.title}
-          slug={page.slug}
-          excerpt={page.seoDescription || page.excerpt || generateExcerpt(cleanWpContent(page.body || ''), 120)}
-          featuredImage={page.featuredImage}
-        />
-      ))}
-    </div>
-
-    <h2 class="mt-2" style="font-size:1.5rem;font-weight:700">Últimos artículos</h2>
+    <h2 class="section-title">Últimos artículos <a href="/blog">Ver todos →</a></h2>
     <div class="card-grid">
       {latestPosts.map((post: any) => (
         <ArticleCard
@@ -57,8 +83,36 @@ const schema = generateWebSiteSchema();
           excerpt={post.seoDescription || post.excerpt || generateExcerpt(cleanWpContent(post.body || ''), 120)}
           featuredImage={post.featuredImage}
           date={post.date}
+          category={post.category_name}
+          categorySlug={post.category_slug}
         />
       ))}
     </div>
+
+    {cats.filter(c => c.slug !== 'blog').map(cat => {
+      const catPosts = getCatPosts(cat.slug);
+      if (!catPosts.length) return null;
+      return (
+        <div>
+          <h2 class="section-title">
+            {cat.emoji} {cat.name}
+            <a href={`/categoria/${cat.slug}/`}>Ver todos →</a>
+          </h2>
+          <div class="card-grid">
+            {catPosts.map((post: any) => (
+              <ArticleCard
+                title={post.title}
+                slug={post.slug}
+                excerpt={post.seoDescription || post.excerpt || generateExcerpt(cleanWpContent(post.body || ''), 110)}
+                featuredImage={post.featuredImage}
+                date={post.date}
+                category={post.category_name}
+                categorySlug={post.category_slug}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    })}
   </div>
 </Base>

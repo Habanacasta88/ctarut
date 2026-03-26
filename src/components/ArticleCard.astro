@@ -5,20 +5,33 @@ interface Props {
   excerpt?: string;
   featuredImage?: string;
   date?: string;
+  category?: string;
+  categorySlug?: string;
 }
 
-const { title, slug, excerpt, featuredImage, date } = Astro.props;
-const formattedDate = date ? new Date(date).toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+const { title, slug, excerpt, featuredImage, date, category, categorySlug } = Astro.props;
+const formattedDate = date ? new Date(date).toLocaleDateString('es-ES', {
+  day: 'numeric', month: 'short', year: 'numeric'
+}) : '';
+
+const catSlugMap: Record<string,string> = {
+  'Reseñas': 'resenas', 'Cuidados': 'cuidados', 'Alimentación': 'alimentacion',
+  'Cachorros': 'cachorros', 'Entrenamiento': 'entrenamiento', 'Blog': 'blog'
+};
+const resolvedCatSlug = categorySlug || (category ? catSlugMap[category] || 'blog' : 'blog');
 ---
 
 <article class="card">
   {featuredImage && (
-    <a href={`/${slug}`} class="card-img">
+    <a href={`/${slug}/`} class="card-img">
       <img src={featuredImage} alt={title} loading="lazy" width="640" height="360" />
     </a>
   )}
   <div class="card-body">
-    <h3><a href={`/${slug}`}>{title}</a></h3>
+    {category && (
+      <a href={`/categoria/${resolvedCatSlug}/`} class="card-category">{category}</a>
+    )}
+    <h3><a href={`/${slug}/`}>{title}</a></h3>
     {excerpt && <p>{excerpt}</p>}
     {formattedDate && <time datetime={date}>{formattedDate}</time>}
   </div>
