@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { items } = Astro.props;
-const siteUrl = 'https://ctarut.com';
+const siteUrl = 'https://labradores.org';
 const fullItems = [{ name: 'Inicio', url: siteUrl }, ...items.map(i => ({ ...i, url: siteUrl + i.url }))];
 const schema = generateBreadcrumbSchema(fullItems);
 ---

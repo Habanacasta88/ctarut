@@ -39,12 +39,12 @@ export function generateArticleSchema(opts: {
     dateModified: opts.dateModified,
     author: {
       '@type': 'Organization',
-      name: opts.author || 'CuentaRUT Chile',
+      name: opts.author || 'Labradores.org',
     },
     publisher: {
       '@type': 'Organization',
-      name: 'CuentaRUT Chile',
-      url: 'https://ctarut.com',
+      name: 'Labradores.org',
+      url: 'https://labradores.org',
     },
   };
 }
@@ -68,12 +68,12 @@ export function generateWebSiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'CuentaRUT Chile',
-    url: 'https://ctarut.com',
-    description: 'Guía completa sobre la Cuenta RUT de BancoEstado Chile',
+    name: 'Labradores.org',
+    url: 'https://labradores.org',
+    description: 'Guía completa en español sobre el Labrador Retriever',
     potentialAction: {
       '@type': 'SearchAction',
-      target: 'https://ctarut.com/?s={search_term_string}',
+      target: 'https://labradores.org/?s={search_term_string}',
       'query-input': 'required name=search_term_string',
     },
   };

@@ -56,7 +56,8 @@ const currentPath = Astro.url.pathname;
   <meta name="twitter:description" content={description} />
   {ogImage && <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />}
 
-  <link rel="icon" type="image/png" href="/images/labradores-favicon.png" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -78,11 +78,14 @@ const articleSchema = isPost ? {
   },
   "publisher": {
     "@type": "Organization",
+    "@id": `${siteUrl}/#organization`,
     "name": "Labradores.org",
     "url": siteUrl,
     "logo": {
       "@type": "ImageObject",
-      "url": `${siteUrl}/images/labradores-favicon.png`
+      "url": `${siteUrl}/images/cropped-Logotipo-Icono-Circular-Animales-y-Mascotas-Azul.png`,
+      "width": 512,
+      "height": 512
     }
   },
   "mainEntityOfPage": {

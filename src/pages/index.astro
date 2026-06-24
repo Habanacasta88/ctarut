@@ -28,9 +28,11 @@ const siteUrl = 'https://labradores.org';
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${siteUrl}/#website`,
   "name": "Labradores.org",
   "url": siteUrl,
   "inLanguage": "es",
+  "publisher": { "@id": `${siteUrl}/#organization` },
   "description": "La guía más completa en español sobre el Labrador Retriever: cuidados, alimentación, entrenamiento, cachorros, salud y reseñas de productos.",
   "potentialAction": {
     "@type": "SearchAction",
@@ -45,13 +47,15 @@ const websiteSchema = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${siteUrl}/#organization`,
   "name": "Labradores.org",
   "url": siteUrl,
   "logo": {
     "@type": "ImageObject",
-    "url": `${siteUrl}/images/labradores-favicon.png`
+    "url": `${siteUrl}/images/cropped-Logotipo-Icono-Circular-Animales-y-Mascotas-Azul.png`,
+    "width": 512,
+    "height": 512
   },
-  "sameAs": [],
   "description": "Sitio informativo sobre el Labrador Retriever en español."
 };
 ---
