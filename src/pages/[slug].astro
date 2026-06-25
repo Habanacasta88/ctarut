@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import AffiliateBlock from '../components/AffiliateBlock.astro';
 import { cleanWpContent, extractHeadings, addHeadingIds, generateExcerpt, injectInternalLinks } from '../utils/content';
+import { buildPageTitle } from '../utils/seo';
 import pagesData from '../data/pages.json';
 import postsData from '../data/posts.json';
 import linkmapData from '../data/linkmap.json';
@@ -106,7 +107,7 @@ const breadcrumbSchema = {
 ---
 
 <Base
-  title={`${seoTitle} — Labradores.org`}
+  title={buildPageTitle(seoTitle)}
   description={seoDesc}
   ogImage={entry.featuredImage}
   canonicalUrl={`https://labradores.org/${entry.slug}/`}
