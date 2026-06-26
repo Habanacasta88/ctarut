@@ -4,6 +4,7 @@ import TableOfContents from '../components/TableOfContents.astro';
 import AffiliateBlock from '../components/AffiliateBlock.astro';
 import { cleanWpContent, extractHeadings, addHeadingIds, generateExcerpt, injectInternalLinks } from '../utils/content';
 import { buildPageTitle } from '../utils/seo';
+import imageDims from '../data/image-dims.json';
 import pagesData from '../data/pages.json';
 import postsData from '../data/posts.json';
 import linkmapData from '../data/linkmap.json';
@@ -61,6 +62,18 @@ const faqSchema = (isPost && entry.faqs && entry.faqs.length > 0) ? {
   }))
 } : null;
 
+// Imagen del artículo como ImageObject con dimensiones reales; si no hay dims
+// (fichero ausente), cae a string (la URL sola sigue siendo válida para Google).
+const featuredImageUrl = entry.featuredImage ? `${siteUrl}${entry.featuredImage}` : undefined;
+const featuredDims = entry.featuredImage
+  ? (imageDims as Record<string, [number, number]>)[entry.featuredImage]
+  : undefined;
+const imageSchema = featuredImageUrl
+  ? (featuredDims
+      ? { "@type": "ImageObject", "url": featuredImageUrl, "width": featuredDims[0], "height": featuredDims[1] }
+      : featuredImageUrl)
+  : undefined;
+
 const articleSchema = isPost ? {
   "@context": "https://schema.org",
   "@type": "Article",
@@ -71,7 +84,7 @@ const articleSchema = isPost ? {
   "wordCount": wordCount,
   "datePublished": entry.date,
   "dateModified": entry.modified || entry.date,
-  "image": entry.featuredImage ? `${siteUrl}${entry.featuredImage}` : undefined,
+  "image": imageSchema,
   "author": {
     "@type": "Organization",
     "name": "Labradores.org",
