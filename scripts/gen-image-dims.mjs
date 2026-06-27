@@ -18,7 +18,10 @@ for (const file of files) {
   try {
     const { width, height } = await sharp(IMAGES_DIR + file).metadata();
     if (width && height) {
-      dims[`/images/${file}`] = [width, height];
+      // Clave normalizada a NFC: posts.json y los nombres en disco difieren a
+      // veces en la forma Unicode de tildes/ñ (NFC vs NFD); sin esto, ~89
+      // imágenes con acentos no encontraban sus dimensiones.
+      dims[`/images/${file}`.normalize('NFC')] = [width, height];
       ok++;
     }
   } catch {
