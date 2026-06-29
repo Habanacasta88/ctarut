@@ -9,7 +9,9 @@ const IMAGES_DIR = fileURLToPath(new URL('../public/images/', import.meta.url));
 const OUT = fileURLToPath(new URL('../src/data/image-dims.json', import.meta.url));
 const IMG_RE = /\.(jpe?g|png|webp|avif|gif)$/i;
 
-const files = (await readdir(IMAGES_DIR)).filter((f) => IMG_RE.test(f)).sort();
+const files = await readdir(IMAGES_DIR)
+  .then((all) => all.filter((f) => IMG_RE.test(f)).sort())
+  .catch(() => []); // dir ausente (CI limpio) -> JSON vacío, fallback a string
 const dims = {};
 let ok = 0;
 let failed = 0;

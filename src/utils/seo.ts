@@ -57,6 +57,7 @@ function shortenTitle(title: string, max: number): string {
 // título base ya llega al límite, y recorta en cláusula si el base es largo.
 export function buildPageTitle(base: string): string {
   const text = (base || '').trim();
+  if (!text) return 'Labradores.org';
   const withBrand = text + TITLE_BRAND;
   if (withBrand.length <= TITLE_MAX) return withBrand;
   if (text.length <= TITLE_MAX) return text;
