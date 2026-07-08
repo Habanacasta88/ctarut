@@ -1,15 +1,33 @@
-# CuentaRUT Chile - ctarut.com
+# Labradores.org
 
-> Guía completa sobre la Cuenta RUT de BancoEstado Chile. Información sobre trámites, consultas de saldo, pagos en línea y beneficios.
+> La guía más completa en español sobre el Labrador Retriever: cuidados, alimentación, entrenamiento, cachorros, salud y reseñas de productos.
 
 ## Sobre este sitio
-CuentaRUT Chile (ctarut.com) es un sitio informativo independiente que ofrece guías detalladas sobre la Cuenta RUT de BancoEstado. No somos BancoEstado ni estamos afiliados a ellos.
 
-## Contenido principal
-- Guías sobre la Cuenta RUT: solicitud, beneficios, montos máximos, bloqueo
-- Pagos en línea: Netflix, Uber, Spotify, Steam, Amazon, AliExpress
-- Información bancaria: PagoRUT, chequera electrónica, Cuenta Pro
-- Trámites: Certificado Fonasa, PayPal, tarjeta Bip
+Labradores.org es un sitio informativo independiente dedicado al Labrador Retriever, la raza de perro más popular del mundo. Ofrecemos artículos detallados escritos por amantes de la raza con experiencia práctica en crianza, cuidado y entrenamiento de labradores.
+
+No somos criadores ni veterinarios oficiales. Nuestro contenido es educativo e informativo. Para diagnósticos médicos, consulta siempre a un veterinario colegiado.
+
+## Categorías principales
+
+- **Cuidados**: Salud, higiene, vacunas, enfermedades comunes del labrador, visitas al veterinario
+- **Alimentación**: Piensos recomendados, dieta BARF, alimentos prohibidos, cantidad por edad
+- **Entrenamiento**: Adiestramiento básico, obediencia, agility, socialización
+- **Cachorros**: Primeras semanas, desparasitación, socialización temprana, educación básica
+- **Reseñas**: Análisis de comida, accesorios, juguetes y productos para labrador
+- **Blog**: Artículos generales sobre la raza, comportamiento y curiosidades
+
+## Estadísticas del sitio
+
+- Más de 400 artículos publicados
+- Contenido en español
+- Actualizado regularmente
 
 ## Contacto
-- Web: https://ctarut.com
+
+- Web: https://labradores.org
+- Política de privacidad: https://labradores.org/politica-de-privacidad/
+
+## Información sobre la raza
+
+El Labrador Retriever es una raza originaria de Newfoundland (Canadá), reconocida por su temperamento amigable, inteligencia y versatilidad. Es la raza más popular en España y en muchos países del mundo. Existen tres colores oficiales: amarillo, chocolate y negro.

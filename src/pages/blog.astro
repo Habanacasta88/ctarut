@@ -1,33 +1,53 @@
 ---
 import Base from '../layouts/Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { generateExcerpt, cleanWpContent } from '../utils/content';
 import postsData from '../data/posts.json';
+
+const PER_PAGE = 32;
+const allPosts = postsData as any[];
+const totalPages = Math.ceil(allPosts.length / PER_PAGE);
+const currentPage = 1;
+const posts = allPosts.slice(0, PER_PAGE);
 ---
 
 <Base
-  title="Blog - CuentaRUT Chile"
-  description="Artículos y noticias sobre la Cuenta RUT de BancoEstado. Novedades, guías y consejos para aprovechar tu cuenta."
+  title="Blog — Labradores.org"
+  description="Todos los artículos sobre el Labrador Retriever: cuidados, salud, alimentación, entrenamiento y más."
+  nextUrl="/blog/2/"
 >
   <div class="container">
-    <Breadcrumbs items={[{ name: 'Blog', url: '/blog' }]} />
+    <div class="breadcrumbs">
+      <a href="/">Inicio</a><span class="sep">›</span>
+      <span>Blog</span>
+    </div>
 
-    <header class="article-header">
+    <div class="cat-header">
       <h1>Blog</h1>
-      <p style="color:#666">Artículos y noticias sobre la Cuenta RUT de BancoEstado</p>
-    </header>
+      <p>Todos los artículos sobre el Labrador Retriever · {allPosts.length} artículos</p>
+    </div>
 
     <div class="card-grid">
-      {postsData.map((post: any) => (
+      {posts.map((post: any) => (
         <ArticleCard
           title={post.title}
           slug={post.slug}
-          excerpt={post.seoDescription || post.excerpt || generateExcerpt(cleanWpContent(post.body || ''), 120)}
+          excerpt={post.seoDescription || post.excerpt || generateExcerpt(cleanWpContent(post.body || ''), 115)}
           featuredImage={post.featuredImage}
           date={post.date}
+          category={post.category_name}
+          categorySlug={post.category_slug}
         />
       ))}
     </div>
+
+    <nav class="pagination" aria-label="Paginación">
+      <span class="current">1</span>
+      {Array.from({ length: Math.min(totalPages - 1, 9) }, (_, i) => i + 2).map(p => (
+        <a href={`/blog/${p}/`}>{p}</a>
+      ))}
+      {totalPages > 10 && <span class="dots">…</span>}
+      {totalPages > 10 && <a href={`/blog/${totalPages}/`}>{totalPages}</a>}
+    </nav>
   </div>
 </Base>

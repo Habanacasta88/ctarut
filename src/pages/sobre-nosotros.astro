@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+
+const siteUrl = 'https://labradores.org';
+
+const aboutSchema = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "Sobre Labradores.org",
+  "description": "Conoce quiénes están detrás de Labradores.org, la guía de referencia en español sobre el Labrador Retriever.",
+  "url": `${siteUrl}/sobre-nosotros/`,
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Labradores.org",
+    "url": siteUrl
+  }
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": "Sobre nosotros", "item": `${siteUrl}/sobre-nosotros/` }
+  ]
+};
+---
+
+<Base
+  title="Sobre Labradores.org — Quiénes somos"
+  description="Labradores.org es la guía de referencia en español sobre el Labrador Retriever. Conoce nuestra misión, metodología y cómo creamos nuestro contenido."
+  canonicalUrl={`${siteUrl}/sobre-nosotros/`}
+  schema={[breadcrumbSchema, aboutSchema]}
+>
+  <div class="container">
+    <div class="breadcrumbs">
+      <a href="/">Inicio</a><span class="sep">›</span>
+      <span>Sobre nosotros</span>
+    </div>
+
+    <div class="about-hero">
+      <p style="font-size:2.5rem;margin-bottom:.5rem">🐾</p>
+      <h1>Sobre Labradores.org</h1>
+      <p>La guía de referencia en español para dueños y amantes del Labrador Retriever.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <h2>🎯 Nuestra misión</h2>
+        <p>Labradores.org nació con un objetivo claro: ofrecer información práctica, honesta y actualizada sobre el Labrador Retriever en español. Somos un equipo apasionado por la raza que cree que cada dueño merece acceso a guías claras y bien documentadas.</p>
+      </div>
+
+      <div class="about-card">
+        <h2>📚 Cómo creamos contenido</h2>
+        <p>Cada artículo se elabora a partir de experiencia directa con la raza, bibliografía veterinaria especializada y contraste con criadores y profesionales. Revisamos y actualizamos el contenido regularmente para mantenerlo vigente y útil.</p>
+      </div>
+
+      <div class="about-card">
+        <h2>🐕 Nuestra experiencia</h2>
+        <p>El equipo de Labradores.org lleva más de una década conviviendo con Labradores Retriever de distintos colores, edades y caracteres. Esa experiencia de primera mano es la base de cada artículo que publicamos: desde el primer día de un cachorro hasta el cuidado del perro senior.</p>
+      </div>
+
+      <div class="about-card">
+        <h2>🔗 Transparencia y afiliados</h2>
+        <p>Labradores.org participa en programas de afiliados de Amazon y AliExpress. Cuando enlazamos a un producto, podemos recibir una pequeña comisión sin coste adicional para ti. Esto nos permite mantener el sitio activo y seguir publicando contenido gratuito. Nunca recomendamos algo que no consideremos genuinamente útil para tu labrador.</p>
+      </div>
+    </div>
+
+    <section style="margin-top:2rem">
+      <h2 style="font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:1rem">¿Sobre qué escribimos?</h2>
+      <p style="color:var(--text-light);margin-bottom:1rem">En Labradores.org encontrarás contenido estructurado en seis grandes áreas:</p>
+      <ul style="display:grid;gap:.6rem;color:var(--text-light);font-size:.95rem">
+        <li><strong style="color:var(--text)">Cuidados</strong> — Salud, higiene, vacunas, desparasitación, enfermedades frecuentes y visitas al veterinario.</li>
+        <li><strong style="color:var(--text)">Alimentación</strong> — Piensos, dieta BARF, alimentos permitidos y prohibidos, cantidad por edad y peso.</li>
+        <li><strong style="color:var(--text)">Entrenamiento</strong> — Adiestramiento básico, obediencia, socialización y corrección de conductas.</li>
+        <li><strong style="color:var(--text)">Cachorros</strong> — Todo lo que necesitas saber desde que adoptas hasta los 12 meses de vida.</li>
+        <li><strong style="color:var(--text)">Reseñas</strong> — Análisis detallados de comida, accesorios, juguetes y productos para la raza.</li>
+        <li><strong style="color:var(--text)">Blog</strong> — Artículos generales sobre la raza, curiosidades y comportamiento.</li>
+      </ul>
+    </section>
+
+    <div class="about-disclaimer">
+      <strong>⚠️ Aviso importante</strong>
+      Labradores.org es un sitio informativo y educativo. El contenido publicado no sustituye la opinión ni el diagnóstico de un veterinario colegiado. Ante cualquier problema de salud de tu perro, consulta siempre a un profesional veterinario.
+    </div>
+  </div>
+</Base>
